@@ -18,9 +18,9 @@ ElasticSearchAPI searchAPI = retrofit.create(ElasticSearchAPI.class);
 
 ##### Here is an example for basic auth
 
-###### ElasticSearchPassword: password get it form firebase database
-
 ```java
+ElasticSearchPassword: password get it form firebase database
+
 HashMap<String, String> headerMap = new HashMap<String, String>();
 headerMap.put("Authorization", Credentials.basic("user", ElasticSearchPassword));
 ```
@@ -30,13 +30,14 @@ headerMap.put("Authorization", Credentials.basic("user", ElasticSearchPassword))
 ```java		
 Call<HitsObject> call = searchAPI.search(headerMap, "AND", searchQuery);
 ```
+
 #### Building the search query
 
 ```java
 String searchQuery = "";
 ```
 
-##### Search: with <keywords> and * for more
+- Search: with "keywords" and * for more
 
 ```java
 searchQuery = searchQuery + keywords + "*";
@@ -44,19 +45,19 @@ searchQuery = searchQuery + keywords + "*";
 	
 #### Filtering:
 
-##### filtreing using wilaya:
+- filtreing using wilaya:
     
 ```java
 searchQuery = searchQuery + " wilaya:" + <wilaya_name_for_filtering>;
 ```
 
-##### filtering using type:
+- filtering using type:
 
 ```java    
 searchQuery = searchQuery + " type:" + <type>;
 ```
 
-##### filtreing using rating:
+- filtreing using rating:
 
     
 ```java
@@ -65,7 +66,7 @@ searchQuery = searchQuery + " type:" + <type>;
 
 ###### ex wilaya filtrening : http://35.232.193.205//elasticsearch/products/product/_search?default_operator=AND&q=+wilaya:Sba
 
-##### filtreing using ranges:
+- filtreing using ranges:
 
 ```java
     searchQuery = searchQuery + " price:" + [<startValue> To <endValue>];
@@ -78,7 +79,7 @@ searchQuery = searchQuery + " type:" + <type>;
 - from: parameter defines the offset from the first result you want to fetch (default=0)
 - size: parameter allows you to configure the maximum amount of hits to be returned (default=10)
 
-##### query:
+- query:
 	
 ```java
 	searchQuery = searchQuery + " from=" + <page_number>;
@@ -100,13 +101,13 @@ searchQuery = searchQuery + " type:" + <type>;
 
 ###### real ex: http://35.232.193.205//elasticsearch/products/product/_search?default_operator=AND&q=*&sort=price:asc
 
-##### make ur call like this and pass the searchQuery and headerMap for auth:
+##### Make ur call like this and pass the searchQuery and headerMap for auth:
 
 ```java
 Call<HitsObject> call = searchAPI.search(headerMap, "AND", searchQuery);
 ```
 
-##### u will receive data on way like this inside ur call:
+- You will receive data on way like this inside ur call:
 
 ```java
 if(response.isSuccessful()){
