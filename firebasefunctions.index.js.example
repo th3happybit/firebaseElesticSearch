@@ -1,0 +1,61 @@
+const functions = require('firebase-functions');
+
+const request = require('request-promise')
+
+exports.indexProductsToElastic = functions.database.ref('/products/{product_id}')
+    .onWrite((change, context) => {
+    
+      // Grab the current value of what was written to the Realtime Database.
+      let productData = change.after.val();
+      let product_id = context.params.product_id;
+
+      console.log('Indexing product:', productData);
+
+      let elasticSearchConfig = functions.config().elasticsearch;
+	  let elasticSearchUrl = elasticSearchConfig.url + 'products/product/' + product_id;
+      let elasticSearchMethod = productData ? 'POST' : 'DELETE';
+		
+	  let elasticSearchRequest = {
+		method: elasticSearchMethod,
+		url: elasticSearchUrl,
+		auth:{
+			username: elasticSearchConfig.username,
+			password: elasticSearchConfig.password,
+		},
+		body: productData,
+		json: true
+		 };
+		 
+	   return request(elasticSearchRequest).then(response => {
+		 console.log("ElasticSearch response", response);
+	   });
+    });
+
+exports.indexStoresToElastic = functions.database.ref('/stores/{store_id}')
+    .onWrite((change, context) => {
+    
+      // Grab the current value of what was written to the Realtime Database.
+      let storeData = change.after.val();
+      let store_id = context.params.store_id;
+
+      console.log('Indexing store:', storeData);
+
+      let elasticSearchConfig = functions.config().elasticsearch;
+	  let elasticSearchUrl = elasticSearchConfig.url + 'stores/store/' + store_id;
+      let elasticSearchMethod = storeData ? 'POST' : 'DELETE';
+		
+	  let elasticSearchRequest = {
+		method: elasticSearchMethod,
+		url: elasticSearchUrl,
+		auth:{
+			username: elasticSearchConfig.username,
+			password: elasticSearchConfig.password,
+		},
+		body: storeData,
+		json: true
+		 };
+		 
+	   return request(elasticSearchRequest).then(response => {
+		 console.log("ElasticSearch response", response);
+	   });
+    });
