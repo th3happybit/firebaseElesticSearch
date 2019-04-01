@@ -119,3 +119,4 @@ for(int i = 0; i < hitsList.getPostIndex().size(); i++){
 }
 ```
 
+###### Docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
