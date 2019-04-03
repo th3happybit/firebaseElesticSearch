@@ -74,7 +74,47 @@ searchQuery = searchQuery + " type:" + <type>;
 
 ###### ex price range from 0 to 300 [0,300] : http://35.232.193.205//elasticsearch/products/product/_search?default_operator=AND&q=*+price:[0 TO 300]
 
-#### Paging using from and size:
+#### Paging using Scroll Api
+
+- scroll: paremeter will allow to configure how much time you want to save the search context
+- size: maximum of hits to be returned
+
+1. First we save the search context:
+
+```java
+	searchQuery = searchQuery + " size=" + <max_of_hits>;
+	searchQuery = searchQuery + " scroll=" + <time>; //ex scroll=1m, m for minute
+```
+
+###### ex : http://35.232.193.205//elasticsearch/products/product/_search?default_operator=AND&q=*&size=3&scroll=1m
+
+2. Retrieve the next batch of results:
+
+```
+POST /_search/scroll
+with those parameters
+{
+   "scroll" : "1m",
+   "scroll_id" : "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAWIWWlRvRGs0bDFTck9FRGtrUFZFRUIzUQ=="
+}
+```
+- scroll: parameter tells Elasticsearch to keep the search context open for another 1m.
+- _scroll_id: will be includes in first request result
+
+###### every time you sent a request you will get a new batch of result
+
+3. Clear Scroll Api 
+
+Search context are automatically removed when the scroll timeout has been exceeded. but here is how to delete it.
+
+```
+DELETE /_search/scroll
+{
+    "scroll_id" : "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ=="
+}
+```
+
+#### Paging using from and size (Not really helpful):
 
 - from: parameter defines the offset from the first result you want to fetch (default=0)
 - size: parameter allows you to configure the maximum amount of hits to be returned (default=10)
